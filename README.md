@@ -5,7 +5,7 @@
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 
-*An AI Friend with voice capabilities, powered by LangGraph*
+**An AI Friend with voice capabilities, powered by LangGraph**
 
 </div>
 
@@ -45,65 +45,6 @@
 - PostgreSQL
 - CUDA-capable GPU (recommended for TTS/STT)
 
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/nguyendao16/hana-bot-langgraph.git
-cd hana-bot-langgraph
-```
-
-2. **Setup environment**
-```bash
-# Automatic setup (recommended)
-.\setup_environment.ps1
-
-# Or manual setup
-conda env create -f hana_conda_environment.yml
-conda activate hana
-pip install torch==2.5.1+cu121 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu121
-```
-
-3. **Configure environment variables**
-```bash
-# Copy .env.example to .env and fill in your credentials
-cp .env.example .env
-```
-
-Required variables:
-```env
-GOOGLE_API_KEY=your_google_api_key
-REDIS_URL=redis://:@localhost:6379/0
-PG_HOST=localhost
-PG_DBNAME=vectorDB
-PG_USER=your_username
-PG_PASSWORD=your_password
-STT_SERVER_URL=ws://localhost:8765
-TTS_SERVER_URL=ws://localhost:8766
-```
-
-### Running Hana
-
-Start the services in separate terminals:
-
-**Terminal 1 - TTS Server:**
-```bash
-conda activate hana
-python voice/hana_tts.py
-```
-
-**Terminal 2 - Main Bot:**
-```bash
-conda activate hana
-python main.py
-```
-
-**Terminal 3 - STT Server (Optional for voice input):**
-```bash
-conda activate hana
-python voice/stt.py
-```
-
 ## 🎭 Persona Development (In Progress)
 
 Hana is in the persona development phase. The characteristics are being built/developed:
@@ -116,46 +57,6 @@ Hana is in the persona development phase. The characteristics are being built/de
 - Cultural awareness
 
 > **Note**: Persona development is an ongoing process. Contributions and suggestions are welcome!
-
-## 📁 Project Structure
-
-```
-hana-bot-langgraph/
-├── agent/
-│   ├── agent.py              # LangGraph agent configuration
-│   ├── prompt_template.txt   # System prompt & persona
-│   └── utils/
-│       ├── memory.py         # Redis memory management
-│       ├── nodes.py          # LangGraph nodes
-│       ├── tools.py          # RAG and custom tools
-│       └── state.py          # Agent state definition
-├── voice/
-│   ├── hana_tts.py          # TTS WebSocket server
-│   ├── stt.py               # STT WebSocket server
-│   └── README_TTS.md        # TTS documentation
-├── Embedding/
-│   └── xlsx_Embedding.py    # Document embedding utilities
-├── main.py                   # Main FastAPI application
-├── setup_environment.ps1     # Auto setup script
-└── hana_conda_environment.yml
-```
-
-## 🔧 API Endpoints
-
-### Chat Endpoint
-```bash
-POST http://localhost:8200/chat
-Content-Type: application/json
-
-{
-  "message": "Hello Hana!",
-  "thread_id": "user-123"
-}
-```
-
-### WebSocket (STT/TTS)
-- **STT Server**: `ws://localhost:8765` - Send audio, receive English transcription
-- **TTS Server**: `ws://localhost:8766` - Send text, receive audio
 
 ## 🛣️ Roadmap
 
