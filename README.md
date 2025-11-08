@@ -1,4 +1,4 @@
-##💮 Hana - AI Friend
+## 💮 Hana - AI Friend
 
 <div align="center">
 
