@@ -1,12 +1,11 @@
-#💮 Hana - Personal AI Assistant Bot
+##💮 Hana - AI Friend
 
 <div align="center">
 
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)
 ![Python](https://img.shields.io/badge/python-3.11-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
 
-*A personal AI assistant with voice capabilities, powered by LangGraph*
+*An AI Friend with voice capabilities, powered by LangGraph*
 
 </div>
 
@@ -14,7 +13,7 @@
 
 ## 📖 About Hana
 
-**Hana** is a personal AI assistant bot currently in development with a focus on creating a unique persona and personality. The goal is to build an AI assistant capable of:
+**Hana** is a AI Friend bot currently in development with a focus on creating a unique persona and personality. The goal is to build an AI capable of:
 
 - 🗣️ **Voice Interaction** - Natural voice-based communication
 - 🧠 **Contextual Memory** - Remember and understand conversation context
@@ -187,23 +186,10 @@ Content-Type: application/json
 - [ ] Advanced memory
 - [ ] Fine-tuning persona
 
-## 🤝 Contributing
-
-Contributions are welcome! Especially for:
-- Persona development suggestions
-- Voice model improvements
-
 ## 📝 License
 
 This project is licensed under the Personal License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
-
-- **LangChain & LangGraph** - AI framework
-- **Google Gemini** - Language model
-- **Kitten TTS** - Text-to-speech engine
-- **RealtimeSTT** - Speech recognition
-- **FastAPI** - Web framework
 
 ## 📧 Contact
 
@@ -217,6 +203,6 @@ For questions or suggestions about Hana's development:
 
 **✨ Hana is evolving... Stay tuned for updates! ✨**
 
-Made with ❤️ by Nguyen Dao
+Made with ❤️ by **Nguyen Dao**
 
 </div>
