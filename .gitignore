@@ -1,0 +1,5 @@
+__pycache__/
+.env
+temp_images/*
+test.py
+memory_cache/*

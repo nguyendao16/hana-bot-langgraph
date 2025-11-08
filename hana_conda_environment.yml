@@ -1,0 +1,51 @@
+name: hana
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - certifi
+  - ca-certificates
+  - numpy
+  - pandas
+  - scikit-learn>=1.6.1
+  - joblib=1.3.2
+  - requests=2.31.0
+  - redis-py
+  - pymongo
+  - asyncpg
+  - psycopg2
+  - pillow
+  - pytesseract
+  - openpyxl
+  - nltk
+
+  - pip:
+    # Note: PyTorch with CUDA will be installed separately via pip after environment creation
+    # Run: pip install torch==2.5.1+cu121 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+    - sounddevice
+    - flask==2.3.3
+    - fastapi
+    - uvicorn
+    - watchfiles
+    - langchain-core
+    - langchain-community
+    - langchain-ollama
+    - langchain-google-genai
+    - langgraph
+    - langchain-openai
+    - langchain-anthropic
+    - langchain-deepseek
+    - transformers==4.33.2
+    - vncorenlp==1.0.3
+    - underthesea>=8.3.0
+    - pydantic
+    - python-dotenv
+    - httpx
+    - opencv-python-headless==4.10.0.84
+    - scyllapy
+    - RealtimeSTT
+    - websockets
+    - ipython
+    - https://github.com/KittenML/KittenTTS/releases/download/0.1/kittentts-0.1.0-py3-none-any.whl
