@@ -1,4 +1,4 @@
-# 🤖 Hana - Personal AI Assistant Bot
+#💮 Hana - Personal AI Assistant Bot
 
 <div align="center">
 
@@ -31,7 +31,6 @@
 ### 🛠️ Technical Stack
 - **Backend**: FastAPI + Python 3.11
 - **AI Framework**: LangChain + LangGraph
-- **LLM**: Google Gemini 2.5 Flash
 - **Memory**: Redis (conversation history)
 - **Database**: PostgreSQL (vector store)
 - **Voice**: RealtimeSTT + Kitten TTS
@@ -106,38 +105,9 @@ conda activate hana
 python voice/stt.py
 ```
 
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         Hana Bot                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐        │
-│  │   STT    │─────▶│ Chatbot  │─────▶│   TTS    │        │
-│  │  Server  │      │  (Main)  │      │  Server  │        │
-│  └──────────┘      └──────────┘      └──────────┘        │
-│       │                  │                  │              │
-│   WebSocket          FastAPI          WebSocket           │
-│       │                  │                  │              │
-│       ▼                  ▼                  ▼              │
-│  ┌──────────┐      ┌──────────┐      ┌──────────┐        │
-│  │ Realtime │      │LangGraph │      │  Kitten  │        │
-│  │   STT    │      │  Agent   │      │   TTS    │        │
-│  └──────────┘      └──────────┘      └──────────┘        │
-│                         │                                  │
-│                    ┌────┴────┐                            │
-│                    │         │                            │
-│              ┌─────▼───┐ ┌──▼──────┐                     │
-│              │  Redis  │ │Postgres │                     │
-│              │ Memory  │ │ Vector  │                     │
-│              └─────────┘ └─────────┘                     │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ## 🎭 Persona Development (In Progress)
 
-Hana đang trong giai đoạn phát triển persona. Các đặc điểm đang được xây dựng:
+Hana is in the persona development phase. The characteristics are being built/developed:
 
 ### 🧩 Personality Quirks (To be developed)
 - Personal preferences
@@ -225,7 +195,7 @@ Contributions are welcome! Especially for:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Personal License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
