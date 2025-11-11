@@ -33,7 +33,6 @@
 - **Memory**: Redis (conversation history)
 - **Database**: PostgreSQL (vector store)
 - **Voice**: RealtimeSTT + Kitten TTS
-- **WebSocket**: Real-time bidirectional communication
 
 ## 🚀 Getting Started
 
@@ -64,8 +63,6 @@ Hana is in the persona development phase. The characteristics are being built/de
 - [x] Basic LangGraph agent
 - [x] Memory management
 - [x] TTS/STT integration
-- [x] WebSocket communication
-- [x] FastAPI backend
 
 ### Phase 2: Persona Development 🚧 (Current)
 - [ ] Define core personality traits
