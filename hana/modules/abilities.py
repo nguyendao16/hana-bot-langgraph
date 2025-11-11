@@ -1,7 +1,10 @@
 from langchain_core.tools import tool
 from langchain_ollama import OllamaEmbeddings
-import asyncpg
+from hana.connection.google_service import GoogleService
+from typing import List, Callable
 import json
+import asyncpg
+import asyncio
 from os import getenv
 from dotenv import load_dotenv
 
@@ -17,31 +20,43 @@ OLLAMAEMBEDDING_MODEL = getenv("OLLAMAEMBEDDING_MODEL")
 embeddings = OllamaEmbeddings(model = OLLAMAEMBEDDING_MODEL,
                               base_url = OLLAMA_HOST)
 
-@tool("rag_search")
-async def rag_search(question, user):
-    """
-    Args:
-        text (str): The input question or query to be searched.
-    Returns:
-        str: JSON string containing the generated answer based on retrieved relevant information with rank of similarity.
-    """
-    conn_vectorstore = await asyncpg.connect(host=PG_HOST, database=PG_VECTORDB, user=PG_USER, password=PG_PASSWORD)
-    vector = str(embeddings.embed_query(question))
-
-    # đổi placeholder từ %s thành $1
-    rows = await conn_vectorstore.fetch(
-        """SELECT question, answer, (question_embedded <=> $1::vector) AS cosine_similarity FROM vector_store
-                        ORDER BY cosine_similarity
-                        LIMIT 3""", vector
-    )
-    await conn_vectorstore.close()
-
-    results = []
-    for row in rows:
-        result = {}
-        result["question"] = row[0]
-        result["answer"] = row[1]
-        result["note"] = row[2]
-        results.append(result)
+class Abilities:
+    def __init__(self, google_service: GoogleService):
+        self.google_service = google_service
     
-    return json.dumps(results, ensure_ascii=False, indent=0)
+    def get_abilities(self) -> List[Callable]:
+        @tool("google_search")
+        def google_search(question: str):
+            """
+            Perform a Google Custom Search using the provided GoogleService instance.
+            Args:
+                question (str): The search query or question to look up on Google.
+            Returns:
+                str: JSON string containing filtered search results with important fields only:
+                    - search_info: total results and search time
+                    - query: the search query
+                    - items: list of results with title, link, snippet, and display_link
+            """
+            raw_result = self.google_service.search(query=question)
+            
+            filtered = {
+                "search_info": {
+                    "total_results": raw_result.get("searchInformation", {}).get("totalResults"),
+                    "search_time": raw_result.get("searchInformation", {}).get("searchTime"),
+                },
+                "query": raw_result.get("queries", {}).get("request", [{}])[0].get("searchTerms"),
+                "items": []
+            }
+            
+            for item in raw_result.get("items", []):
+                filtered_item = {
+                    "title": item.get("title"),
+                    "link": item.get("link"),
+                    "snippet": item.get("snippet"),
+                    "display_link": item.get("displayLink")
+                }
+                filtered["items"].append(filtered_item)
+            
+            return json.dumps(filtered, ensure_ascii=False, indent=2)
+    
+        return [google_search]
