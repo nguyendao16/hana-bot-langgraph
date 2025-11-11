@@ -3,11 +3,12 @@ from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pathlib import Path
 from hana.modules.abilities import Abilities
-from hana.modules.brain import Brain
+from hana.modules.brain import Brain, Memory
 from hana.modules.ears import Ears
 from hana.modules.mouth import Mouth
 from hana.hana import Hana
 from hana.connection.google_service import GoogleService
+from hana.connection.redisconpool import RedisService
 
 load_dotenv()
 OLLAMA_MODEL = getenv("OLLAMA_MODEL")
@@ -16,12 +17,16 @@ KITTENML_VOICE = getenv("KITTENML_VOICE")
 REALTIMETTS_MODEL = getenv("REALTIMETTS_MODEL")
 GOOGLE_SERVICE_API = getenv("GOOGLE_SERVICE_API")
 GOOGLE_CX = getenv("GOOGLE_CX")
+REDIS_URL = getenv("REDIS_URL")
 
 def CallHana():
     google_service = GoogleService(api_key=GOOGLE_SERVICE_API,
                                    cx=GOOGLE_CX
                                    )
     google_service.build_google_service()
+    
+    RedisService.initialize_pool(url=REDIS_URL)
+    redis_service = RedisService()
 
     current_dir = Path(__file__).parent
     prompt_path = current_dir / 'hana/persona.txt'
@@ -33,9 +38,12 @@ def CallHana():
     HanaAbilities = Abilities(google_service=google_service,)
     abilities = HanaAbilities.get_abilities() 
 
+    memory = Memory(redis_conn=redis_service)
+    
     HanaBrain = Brain(powerby=OLLAMA_MODEL, 
                   persona=persona, 
                   abilities=abilities,
+                  memory=memory,
                   )
     HanaMouth = Mouth(powerby=KITTENML_MODEL, 
                     voice=KITTENML_VOICE

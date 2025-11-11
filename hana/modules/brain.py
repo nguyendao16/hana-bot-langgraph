@@ -1,7 +1,9 @@
 from langchain_ollama import ChatOllama
-from langchain_core.messages import ToolMessage, AIMessage
+from langchain_core.messages import ToolMessage, AIMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
+from hana.modules.state import State
 from hana.modules.abilities import Abilities
+from hana.connection.redisconpool import RedisService
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -11,12 +13,14 @@ class Brain:
     def __init__(self, powerby: str, 
                        persona: ChatPromptTemplate,
                        abilities: list,
+                       memory = None,
                        ): 
         llm = ChatOllama(model=powerby, base_url=OLLAMA_HOST)
         if abilities:
             llm = llm.bind_tools(abilities)
         self.brain = persona | llm
         self.abilities_name = {ability.name: ability for ability in abilities}
+        self.memory = memory
     
     def filter_non_text(self, text: str) -> str:
         text = text.replace('\\n', ' ').replace('\\t', ' ').replace('\\r', '')
@@ -28,10 +32,19 @@ class Brain:
                 filtered_chars.append(char)
         return ''.join(filtered_chars).strip()
     
-    def __call__(self, state: dict):
+    def __call__(self, state: State):
         messages = state.get("messages")
-        response = self.thinking(messages)
+        conversant = state.get("conversant")
 
+        if messages and len(messages) > 0:
+            original_content = messages[0].content
+            messages[0].content = f"{conversant} is takling to you: {original_content}"
+        
+        history = self.recall_memory(type="shortTerm_memory", state=state)
+        messages = [(SystemMessage(content=f"Conversation history: {history}"))] + messages
+        
+        response = self.thinking(messages)
+        
         if hasattr(response, 'content') and response.content:
             filtered_content = self.filter_non_text(response.content)
             response = AIMessage(
@@ -41,6 +54,7 @@ class Brain:
             )
         
         state["hana_response"] = response
+        self.remember_memory(type="shortTerm_memory", state=state)
         return state
     
     def thinking(self, messages: list):
@@ -61,8 +75,37 @@ class Brain:
                                      tool_call_id=ability["id"],)
         return ability_result
     
-    async def shortTerm_memory(self):
-        pass
+    def recall_memory(self, type: str, state: State):
+        if type == "shortTerm_memory":
+            history = self.memory.shortTerm_memory(mode="recall", state=state)
+            return history
+        
+        elif type == "longTerm_memory":
+            pass
+    
+    def remember_memory(self, type: str, state:State):
+        if type == "shortTerm_memory":
+            self.memory.shortTerm_memory(mode="remember", state=state)
+        
+        elif type == "longTerm_memory":
+            pass
+    
 
-    async def longTerm_memory(self):
+class Memory:
+    def __init__(self, redis_conn):
+        self.redis_conn = redis_conn
+    
+    def shortTerm_memory(self, mode, state: State):
+        if mode == "recall":
+            history = self.redis_conn.get_history("Hana_ShortTerm")
+            return history
+        
+        elif mode == "remember":
+            conversant_message = state.get('messages')[0].content
+            hana_response = state.get("hana_response").content
+            self.redis_conn.list_history("Hana_ShortTerm", conversant_message)
+            self.redis_conn.list_history("Hana_ShortTerm", hana_response)
+            return "Hana Remembered Conversation"
+    
+    def longTerm_memory(self):
         pass
