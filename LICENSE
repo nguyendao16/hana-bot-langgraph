@@ -1,33 +1,98 @@
-PERSONAL USE LICENSE (2025)
+**All Rights Reserved / Giữ toàn bộ quyền sở hữu**
 
-Copyright (c) 2025 Dao Khoi Nguyen
+---
 
-Permission is granted to view, read, and run the source code contained in this repository strictly for personal,
-non-commercial, educational, or reference purposes only.
+## 🇬🇧 ENGLISH VERSION (Legally Binding)
 
-You MAY NOT, under any circumstances, without the express prior written permission of the copyright holder:
-  • copy, reproduce, or mirror the code in whole or in part;
-  • create derivative works, adaptations, translations, or modifications of the code;
-  • redistribute, publish, sublicense, rent, lease, sell, transfer, or otherwise make the code available to third parties;
-  • incorporate the code into any product, service, or system made available to others (commercial or non-commercial).
+**Copyright (c) 2025 Dao Khoi Nguyen**
+**All Rights Reserved.**
+
+Permission is hereby granted to view, read, and execute the source code contained in this repository
+strictly for **personal, non-commercial use by natural persons only**.
+
+You **MAY NOT**, without the express prior written permission of the copyright holder:
+
+* copy, reproduce, or mirror the code in whole or in part;
+* create derivative works, adaptations, translations, or modifications of the code;
+* redistribute, publish, sublicense, rent, lease, sell, transfer, or otherwise make the code available to others;
+* incorporate the code into any product, service, or system made available to others (commercial or non-commercial);
+* use the code for organizational, institutional, or corporate purposes.
 
 All rights not expressly granted are hereby reserved.
 
-To request permission for uses not allowed above, contact the copyright holder in writing (see CONTACT INFORMATION below).
-Any permission granted in writing may be subject to terms, conditions, and fees at the sole discretion of the copyright holder.
+### INTELLECTUAL PROPERTY
 
-DISCLAIMER OF WARRANTY
+This License does not grant you any ownership rights in the software or any related intellectual property.
+All rights remain exclusively with the copyright holder.
+
+### DISCLAIMER OF WARRANTY
+
 THIS SOFTWARE IS PROVIDED "AS IS" AND THE COPYRIGHT HOLDER DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS,
 IMPLIED, OR STATUTORY, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR
 A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THE COPYRIGHT HOLDER SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT,
 INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING FROM THE USE OR INABILITY TO USE THIS SOFTWARE.
 
-SEVERABILITY
-If any provision of this License is held to be unenforceable, invalid, or void, that provision will be enforced
-to the maximum extent permitted and the remaining provisions will remain in full force and effect.
+### GOVERNING LAW AND INTERNATIONAL RECOGNITION
 
-CONTACT INFORMATION
-Copyright holder: Dao Khoi Nguyen
-Email: daokhoinguyen.go@gmai.com
+This License shall be governed by and construed in accordance with the laws of **Vietnam**.
+Any dispute arising under this License shall be subject to the exclusive jurisdiction of the courts of **Hanoi, Vietnam**.
 
-Effective date: November 7, 2025
+This work is also protected under the **Berne Convention for the Protection of Literary and Artistic Works (1886)**,
+to which Vietnam and over 180 countries are signatories. Therefore, the copyright and license restrictions stated herein
+are internationally enforceable in all Berne Convention member countries.
+
+### CONTACT INFORMATION
+
+For permissions or inquiries, contact:
+**Dao Khoi Nguyen**
+Email: **[daokhoinguyen.go@gmail.com](mailto:daokhoinguyen.go@gmail.com)**
+
+Effective date: **November 7, 2025**
+
+---
+
+## 🇻🇳 BẢN DỊCH TIẾNG VIỆT (Tham khảo)
+
+**Bản quyền (c) 2025 Dao Khoi Nguyen**
+**Giữ toàn bộ quyền sở hữu.**
+
+Giấy phép này cho phép bạn **xem, đọc, và chạy** mã nguồn trong kho này
+**chỉ cho mục đích cá nhân, phi thương mại, và chỉ dành cho cá nhân (không phải tổ chức).**
+
+Bạn **KHÔNG ĐƯỢC PHÉP**, nếu không có **sự đồng ý bằng văn bản** của tác giả:
+
+* Sao chép, tái sản xuất, hoặc nhân bản toàn bộ hoặc một phần mã nguồn.
+* Tạo các tác phẩm phái sinh, bản dịch, chỉnh sửa, hoặc biến thể của mã nguồn.
+* Phân phối, công bố, cho thuê, bán, chuyển nhượng, hoặc cung cấp mã nguồn cho bên thứ ba.
+* Sử dụng mã nguồn trong bất kỳ sản phẩm, dịch vụ, hay hệ thống nào được cung cấp cho người khác (dù thương mại hay phi thương mại).
+* Sử dụng mã nguồn cho mục đích tổ chức, công ty, hoặc cơ quan.
+
+Mọi quyền không được cấp rõ ràng trong giấy phép này đều thuộc về tác giả.
+
+### SỞ HỤU TRÍ TUỆ
+
+Giấy phép này **không trao quyền sở hữu** phần mềm hoặc bất kỳ tài sản trí tuệ nào liên quan.
+Mọi quyền sở hữu vẫn thuộc về tác giả gốc.
+
+### MIỄN TRỬ TRÁCH NHIỆM
+
+PHẦN MỀM NÀY ĐƯỢC CUNG CẤP "NGUYÊN TRẠNG" VÀ TÁC GIẢ KHÔNG CHỆU BẤT KỲ TRÁCH NHIỆM NÀO
+VỀ TÍNH CHÍNH XÁC, TÍNH ỔN ĐỊNH, HAY PHÙ HỢP CHO MỤC ĐÍCH SỬ DỤNG CỤ THỂ.
+TÁC GIẢ KHÔNG CHỆU TRÁCH NHIỆM VỀ BẤT KỲ THIỆT HẠI TRỰC TIẾP HOẶC GIÁN TIẾP NÀO PHÁT SINH Từ VIỆC SỬ DỤNG HOẶC KHÔNG THỂ SỬ DỤNG PHẦN MỀM NÀY.
+
+### LUẬT ĐIỀU CHỈNH VÀ HIỆU LỰC QUỐC TẾ
+
+Giấy phép này được điều chỉnh và diễn giải theo **pháp luật Việt Nam**.
+Mọi tranh chấp phát sinh sẽ được giải quyết tại **Tòa án Nhân dân Thành phố Hà Nội**.
+
+Tác phẩm này đồng thời được bảo hộ theo **Công ước Berne về Bảo hộ các Tác phẩm Văn học và Nghệ thuật (1886)**,
+mà Việt Nam cùng hơn 180 quốc gia khác là thành viên.
+Do đó, các quyền và giới hạn bản quyền trong giấy phép này có hiệu lực tại **mọi quốc gia thành viên của Công ước Berne**.
+
+### THÔNG TIN LIÊN HỆ
+
+Liên hệ xin phép sử dụng:
+**Dao Khoi Nguyen**
+Email: **[daokhoinguyen.go@gmail.com](mailto:daokhoinguyen.go@gmail.com)**
+
+Ngày hiệu lực: **07/11/2025**
