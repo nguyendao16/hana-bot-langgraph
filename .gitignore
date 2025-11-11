@@ -3,3 +3,10 @@ __pycache__/
 temp_images/*
 test.py
 memory_cache/*
+old/
+.vscode/
+Embedding/*
+pgconpool.py
+redisconpool.py
+scylla.py
+realtimesst.log
