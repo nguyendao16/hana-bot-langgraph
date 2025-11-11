@@ -5,7 +5,7 @@ test.py
 memory_cache/*
 old/
 .vscode/
-Embedding/*
+Embedding/
 pgconpool.py
 redisconpool.py
 scylla.py
