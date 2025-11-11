@@ -7,7 +7,6 @@ old/
 .vscode/
 Embedding/
 pgconpool.py
-redisconpool.py
 scylla.py
 realtimesst.log
 setup_environment.ps1
