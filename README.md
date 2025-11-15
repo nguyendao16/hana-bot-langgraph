@@ -61,28 +61,27 @@ Hana is in the persona development phase. The characteristics are being built/de
 
 ### Phase 1: Core Functionality ✅
 - [x] Basic LangGraph agent
-- [x] Memory management
+- [x] Memory management (Short-Term Memory)
 - [x] TTS/STT integration
 
-### Phase 2: Persona Development 🚧 (Current)
+### Phase 2: Deep Development 🚧 (Current)
 - [ ] Define core personality traits
-- [ ] Create consistent response patterns
 - [ ] Develop emotional intelligence
-- [ ] Add persona-specific knowledge base
-- [ ] Implement personality-driven decision making
-
-### Phase 3: Advanced Features 📋
+- [ ] Long-Term Memory
+- [ ] Discord Hana
+- [ ] Speaker Diarization
 - [ ] Multi-language support
-- [ ] Context-aware responses
-- [ ] Proactive suggestions
 - [ ] Custom tools integration
-
-### Phase 4: Optimization 📋
+  - [x] Google Search
+  - [ ] Notion
+  - [ ] Notion Calender
 - [ ] Response time optimization
-- [ ] Memory efficiency
+- [ ] Connection efficiency
+  - [x] Redis Connection Pool
+  - [x] Postgres Connection Pool
+  - [ ] Google Connection
 - [ ] Scalability improvements
 - [ ] Advanced memory
-- [ ] Fine-tuning persona
 
 ## 📝 License
 
