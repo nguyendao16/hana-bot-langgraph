@@ -1,12 +1,15 @@
-import asyncpg
+import psycopg2
+from psycopg2 import pool
 
 class PostgresService:
     _pool = None 
     @classmethod
-    async def initialize_pool(cls, host, database, user, password, port):
+    def initialize_pool(cls, host, database, user, password, port, minconn=1, maxconn=10):
         if cls._pool is None:
             print("Initializing the shared connection pool for Postgres...")
-            cls._pool = await asyncpg.create_pool(
+            cls._pool = psycopg2.pool.SimpleConnectionPool(
+                minconn,
+                maxconn,
                 host=host,
                 port=port,
                 database=database, 
@@ -14,23 +17,41 @@ class PostgresService:
                 password=password
             )
     @classmethod
-    async def close_pool(cls):
+    def close_pool(cls):
         if cls._pool:
-            await cls._pool.close()
+            cls._pool.closeall()
             cls._pool = None
             print("Closing Postgres connection pool...")
-    def __inti__(self):
+    
+    def __init__(self):
         if self._pool is None:
             raise RuntimeError("Pool has not been initialized. Call initialize_pool() first.")
     
-    async def execute(self, query, *args):
-        async with self._pool.acquire() as connection:
-            return await connection.execute(query, *args)
+    def execute(self, query, *args):
+        conn = self._pool.getconn()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, args)
+                conn.commit()
+                return cursor.rowcount
+        finally:
+            self._pool.putconn(conn)
     
-    async def fetch(self, query, *args):
-        async with self._pool.acquire() as connection:
-            return await connection.fetch(query, *args)
+    def fetch(self, query, *args):
+        conn = self._pool.getconn()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, args)
+                return cursor.fetchall()
+        finally:
+            self._pool.putconn(conn)
     
-    async def fetchrow(self, query, *args):
-        async with self._pool.acquire() as connection:
-            return await connection.fetchrow(query, *args)
+    def fetchrow(self, query, *args):
+        conn = self._pool.getconn()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, args)
+                return cursor.fetchone()
+        finally:
+            self._pool.putconn(conn)
+
