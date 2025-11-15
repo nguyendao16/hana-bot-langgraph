@@ -31,6 +31,15 @@ PG_USER = getenv("PG_USER")
 PG_PASSWORD = getenv("PG_PASSWORD")
 PG_PORT = getenv("PG_PORT")
 
+def cleanup():
+    print("\n\nShutting down Hana...")
+    try:
+        RedisService.close_pool()
+        PostgresService.close_pool()
+        print("All connections closed successfully.")
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
+
 def CallHana():
     google_service = GoogleService(api_key=GOOGLE_SERVICE_API,
                                    cx=GOOGLE_CX,
@@ -77,4 +86,9 @@ def CallHana():
     hana_instance.AskHana()
 
 if __name__ == '__main__':
-    CallHana()
+    try:
+        CallHana()
+    except KeyboardInterrupt:
+        print("\n\n=== Hana is stopped ===")
+    finally:
+        cleanup()

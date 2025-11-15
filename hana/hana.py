@@ -47,9 +47,6 @@ class Hana:
                 
                 print("\n=== Conversation completed. Starting new conversation... ===\n")
                 
-            except KeyboardInterrupt:
-                print("\n\n=== Hana is stopped ===")
-                break
             except Exception as e:
                 print(f"\nError occurred: {e}")
                 print("=== Restarting conversation... ===\n")
