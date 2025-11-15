@@ -92,8 +92,9 @@ class Brain:
     
 
 class Memory:
-    def __init__(self, redis_conn):
+    def __init__(self, redis_conn, pg_con):
         self.redis_conn = redis_conn
+        self.pg_con = pg_con
     
     def shortTerm_memory(self, mode, state: State):
         if mode == "recall":
@@ -107,5 +108,8 @@ class Memory:
             self.redis_conn.list_history("Hana_ShortTerm", hana_response)
             return "Hana Remembered Conversation"
     
-    def longTerm_memory(self):
-        pass
+    def longTerm_memory(self, mode, state: State):
+        if mode == "recall":
+            pass
+        elif mode == "remember":
+            pass
