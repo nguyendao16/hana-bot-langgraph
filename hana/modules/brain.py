@@ -50,7 +50,7 @@ class Brain:
             response = AIMessage(
                 content=filtered_content,
                 additional_kwargs=getattr(response, 'additional_kwargs', {}),
-                response_metadata=getattr(response, 'response_metadata', {})
+                response_metadata=getattr(response, 'response_metadata', {}),
             )
         
         state["hana_response"] = response
@@ -76,18 +76,17 @@ class Brain:
         return ability_result
     
     def recall_memory(self, type: str, state: State):
-        if type == "shortTerm_memory":
-            history = self.memory.shortTerm_memory(mode="recall", state=state)
+        if type == "shortTerm":
+            history = self.memory.shortTerm(mode="recall", state=state)
             return history
         
-        elif type == "longTerm_memory":
+        elif type == "longTerm":
             pass
     
     def remember_memory(self, type: str, state:State):
-        if type == "shortTerm_memory":
-            self.memory.shortTerm_memory(mode="remember", state=state)
-        
-        elif type == "longTerm_memory":
+        if type == "shortTerm":
+            self.memory.shortTerm(mode="remember", state=state)
+        elif type == "longTerm":
             pass
     
 
@@ -96,7 +95,7 @@ class Memory:
         self.redis_conn = redis_conn
         self.pg_con = pg_con
     
-    def shortTerm_memory(self, mode, state: State):
+    def shortTerm(self, mode, state: State):
         if mode == "recall":
             history = self.redis_conn.get_history("Hana_ShortTerm")
             return history
@@ -108,7 +107,7 @@ class Memory:
             self.redis_conn.list_history("Hana_ShortTerm", hana_response)
             return "Hana Remembered Conversation"
     
-    def longTerm_memory(self, mode, state: State):
+    def longTerm(self, mode, state: State):
         if mode == "recall":
             pass
         elif mode == "remember":
