@@ -9,11 +9,6 @@ from os import getenv
 from dotenv import load_dotenv
 
 load_dotenv()
-PG_VECTORDB = getenv("PG_VECTORDB")
-PG_HOST = getenv("PG_HOST")
-PG_DBNAME = getenv("PG_DBNAME")
-PG_USER = getenv("PG_USER")
-PG_PASSWORD = getenv("PG_PASSWORD")
 OLLAMA_HOST = getenv("OLLAMA_HOST")
 OLLAMAEMBEDDING_MODEL = getenv("OLLAMAEMBEDDING_MODEL")
 
