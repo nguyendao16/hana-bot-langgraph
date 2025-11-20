@@ -1,6 +1,7 @@
 from os import getenv
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage
 from pathlib import Path
 from hana.modules.abilities import Abilities
 from hana.modules.brain import Brain, Memory
@@ -18,6 +19,15 @@ REALTIMETTS_MODEL = getenv("REALTIMETTS_MODEL")
 GOOGLE_SERVICE_API = getenv("GOOGLE_SERVICE_API")
 GOOGLE_CX = getenv("GOOGLE_CX")
 REDIS_URL = getenv("REDIS_URL")
+DISCORD_TOKEN = getenv("DISCORD_TOKEN")
+
+def cleanup():
+    print("\n\nShutting down Hana...")
+    try:
+        RedisService.close_pool()
+        print("All connections closed successfully.")
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
 
 def CallHana():
     google_service = GoogleService(api_key=GOOGLE_SERVICE_API,
@@ -54,7 +64,43 @@ def CallHana():
                          ears=HanaEars, 
                          mouth=HanaMouth,)
     hana_instance.CraftingHana()
-    hana_instance.AskHana()
+    return hana_instance
 
 if __name__ == '__main__':
-    CallHana()
+    import discord
+    import asyncio
+    from concurrent.futures import ThreadPoolExecutor
+    
+    intents = discord.Intents.default()
+    intents.message_content = True
+
+    client = discord.Client(intents=intents)
+    hana_instance = CallHana()
+    executor = ThreadPoolExecutor(max_workers=3)
+    
+    @client.event
+    async def on_ready():
+        print(f'We have logged in as {client.user}')
+
+    @client.event
+    async def on_message(message):
+        if message.author == client.user:
+            return
+
+        if message.content.startswith("Hana"):
+            input_state = {"messages": [HumanMessage(message.content)], "conversant": message.author.name, "hana_response": "", "channel": "text"}
+
+            loop = asyncio.get_event_loop()
+            response_text = await loop.run_in_executor(executor, hana_instance.AskHana, input_state)
+            
+            await message.channel.send(response_text)
+
+    try:
+        client.run(DISCORD_TOKEN)
+    except KeyboardInterrupt:
+        print("\n\n=== Hana Discord Bot is stopped ===")
+    finally:
+        print("Cleaning up resources...")
+        executor.shutdown(wait=True)
+        cleanup()
+    

@@ -2,6 +2,7 @@ from langgraph.graph import StateGraph, START, END
 from dotenv import load_dotenv
 from os import getenv
 from .modules.state import State
+from .modules.nervous_system import ChannelCheck, OutputRouter
 
 load_dotenv()
 OLLAMA_HOST=getenv("OLLAMA_HOST")
@@ -23,8 +24,12 @@ class Hana:
         graph_builder.add_node("Brain", self.brain)
         graph_builder.add_node("Ears", self.ears)
         graph_builder.add_node("Mouth", self.mouth)
-        
-        graph_builder.add_edge(START, "Ears")
+        graph_builder.add_node("ChannelCheck", ChannelCheck)
+
+        graph_builder.add_edge(START, "ChannelCheck")
+        graph_builder.add_conditional_edges("ChannelCheck",
+                                            OutputRouter,
+                                            {"voice": "Ears", "text": "Brain"})
         graph_builder.add_edge("Ears", "Brain")
         graph_builder.add_edge("Brain", "Mouth")
         graph_builder.add_edge("Mouth", END)
@@ -33,24 +38,21 @@ class Hana:
         print("Done <3 <3 <3")
         return self.hana
     
-    def AskHana(self):
+    def AskHana(self, input_state):
         print("\n=== Starting Hana Execution ===\n")
-        while True:
-            try:
-                input_state = {"messages": [], "conversant": "Futurio", "hana_response": ""}
-                
-                for output in self.hana.stream(input_state):
-                    for node_name, node_output in output.items():
-                        print(f"--- Node: {node_name} ---")
-                        print(f"Output: {node_output}")
-                        print()
-                
-                print("\n=== Conversation completed. Starting new conversation... ===\n")
-                
-            except KeyboardInterrupt:
-                print("\n\n=== Hana is stopped ===")
-                break
-            except Exception as e:
-                print(f"\nError occurred: {e}")
-                print("=== Restarting conversation... ===\n")
-                continue
+        try:
+            for output in self.hana.stream(input_state):
+                for node_name, node_output in output.items():
+                    print(f"--- Node: {node_name} ---")
+                    print(f"Output: {node_output}")
+                    print()
+
+                    if node_name == "Brain":
+                        response = node_output.get("hana_response").content
+            return response
+            
+        except KeyboardInterrupt:
+            print("\n\n=== Hana is stopped ===")
+        except Exception as e:
+            print(f"\nError occurred: {e}")
+            print("=== Restarting conversation... ===\n")
