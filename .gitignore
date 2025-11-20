@@ -6,7 +6,6 @@ memory_cache/*
 old/
 .vscode/
 Embedding/
-pgconpool.py
 scylla.py
 realtimesst.log
 setup_environment.ps1
