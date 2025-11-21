@@ -2,7 +2,7 @@ from langgraph.graph import StateGraph, START, END
 from dotenv import load_dotenv
 from os import getenv
 from .modules.state import State
-from .modules.nervous_system import ChannelCheck, OutputRouter
+from .modules.nervous_system import ChannelCheck, ChannelRouter
 
 load_dotenv()
 OLLAMA_HOST=getenv("OLLAMA_HOST")
@@ -28,10 +28,12 @@ class Hana:
 
         graph_builder.add_edge(START, "ChannelCheck")
         graph_builder.add_conditional_edges("ChannelCheck",
-                                            OutputRouter,
+                                            ChannelRouter,
                                             {"voice": "Ears", "text": "Brain"})
         graph_builder.add_edge("Ears", "Brain")
-        graph_builder.add_edge("Brain", "Mouth")
+        graph_builder.add_conditional_edges("Brain",
+                                            ChannelRouter,
+                                            {"voice": "Mouth", "text": END})
         graph_builder.add_edge("Mouth", END)
         Hana = graph_builder.compile()
         self.hana = Hana

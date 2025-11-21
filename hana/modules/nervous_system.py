@@ -12,7 +12,7 @@ def ChannelCheck(state: State):
         state["route"] = "text"
     return state
 
-def OutputRouter(state: State):
+def ChannelRouter(state: State):
     ch = state.get("channel")
     if ch == "voice":
         return "voice"

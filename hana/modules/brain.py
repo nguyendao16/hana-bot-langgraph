@@ -1,4 +1,6 @@
 from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import ToolMessage, AIMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
 from hana.modules.state import State
@@ -8,6 +10,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 OLLAMA_HOST = os.getenv("OLLAMA_HOST")
+GOOGLE_SERVICE_API = os.getenv("GOOGLE_SERVICE_API")
+OPENAI_API = os.getenv("OPENAI_API")
 
 class Brain:
     def __init__(self, powerby: str, 
@@ -15,14 +19,38 @@ class Brain:
                        abilities: list,
                        memory = None,
                        ): 
-        llm = ChatOllama(model=powerby, base_url=OLLAMA_HOST)
+        #llm = ChatOllama(model=powerby, base_url=OLLAMA_HOST)
+        llm = ChatOpenAI(model=powerby, 
+                         api_key=OPENAI_API,
+                         max_tokens=100)
         if abilities:
             llm = llm.bind_tools(abilities)
         self.brain = persona | llm
         self.abilities_name = {ability.name: ability for ability in abilities}
         self.memory = memory
     
-    def filter_non_text(self, text: str) -> str:
+    def extract_text_from_content(self, content):
+        if isinstance(content, list):
+            text_parts = []
+            for item in content:
+                if isinstance(item, dict) and 'text' in item:
+                    text_parts.append(item['text'])
+                elif isinstance(item, str):
+                    text_parts.append(item)
+                else:
+                    text_parts.append(str(item))
+            return ' '.join(text_parts)
+        
+        if isinstance(content, dict):
+            if 'text' in content:
+                return content['text']
+            return str(content)
+        
+        return str(content)
+    
+    def filter_non_text(self, text) -> str:
+        text = self.extract_text_from_content(text)
+        
         text = text.replace('\\n', ' ').replace('\\t', ' ').replace('\\r', '')
         text = text.replace('\\', '')
         
@@ -61,8 +89,9 @@ class Brain:
         while True:
             response = self.brain.invoke({"messages": messages})
             if hasattr(response, "tool_calls") and len(response.tool_calls) > 0:
-                result = self.perform_ability(response.tool_calls)
-                messages.append(result)
+                messages.append(response)
+                tool_result = self.perform_ability(response.tool_calls)
+                messages.append(tool_result)
             else:
                 return response
 

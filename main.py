@@ -16,6 +16,8 @@ from hana.connection.pgconpool import PostgresService
 
 load_dotenv()
 OLLAMA_MODEL = getenv("OLLAMA_MODEL")
+GEMINI_MODEL = getenv("GEMINI_MODEL")
+OPENAI_MODEL = getenv("OPENAI_MODEL")
 
 KITTENML_MODEL = getenv("KITTENML_MODEL")
 KITTENML_VOICE = getenv("KITTENML_VOICE")
@@ -79,7 +81,7 @@ def CallHana():
 
     memory = Memory(redis_conn=redis_service, pg_con=postgres_service)
     
-    HanaBrain = Brain(powerby=OLLAMA_MODEL, 
+    HanaBrain = Brain(powerby=OPENAI_MODEL, 
                   persona=persona, 
                   abilities=abilities,
                   memory=memory,
@@ -117,7 +119,11 @@ if __name__ == '__main__':
             return
 
         if message.content.startswith("Hana"):
-            input_state = {"messages": [HumanMessage(message.content)], "conversant": message.author.name, "hana_response": "", "channel": "text"}
+            conversant_name = message.author.name
+            if conversant_name == "futurio16":
+                conversant_name = "Futurio"
+            
+            input_state = {"messages": [HumanMessage(message.content)], "conversant": conversant_name, "hana_response": "", "channel": "text"}
 
             loop = asyncio.get_event_loop()
             response_text = await loop.run_in_executor(executor, hana_instance.AskHana, input_state)
