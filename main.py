@@ -3,6 +3,7 @@ warnings.filterwarnings("ignore", category=UserWarning, message=".*pkg_resources
 from os import getenv
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage
 from pathlib import Path
 from hana.modules.abilities import Abilities
 from hana.modules.brain import Brain, Memory
@@ -15,6 +16,8 @@ from hana.connection.pgconpool import PostgresService
 
 load_dotenv()
 OLLAMA_MODEL = getenv("OLLAMA_MODEL")
+GEMINI_MODEL = getenv("GEMINI_MODEL")
+OPENAI_MODEL = getenv("OPENAI_MODEL")
 
 KITTENML_MODEL = getenv("KITTENML_MODEL")
 KITTENML_VOICE = getenv("KITTENML_VOICE")
@@ -24,6 +27,15 @@ GOOGLE_SERVICE_API = getenv("GOOGLE_SERVICE_API")
 GOOGLE_CX = getenv("GOOGLE_CX")
 
 REDIS_URL = getenv("REDIS_URL")
+DISCORD_TOKEN = getenv("DISCORD_TOKEN")
+
+def cleanup():
+    print("\n\nShutting down Hana...")
+    try:
+        RedisService.close_pool()
+        print("All connections closed successfully.")
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
 
 PG_HOST = getenv("PG_HOST")
 PG_DBNAME = getenv("PG_DBNAME")
@@ -69,7 +81,7 @@ def CallHana():
 
     memory = Memory(redis_conn=redis_service, pg_con=postgres_service)
     
-    HanaBrain = Brain(powerby=OLLAMA_MODEL, 
+    HanaBrain = Brain(powerby=OPENAI_MODEL, 
                   persona=persona, 
                   abilities=abilities,
                   memory=memory,
@@ -83,12 +95,47 @@ def CallHana():
                          ears=HanaEars, 
                          mouth=HanaMouth,)
     hana_instance.CraftingHana()
-    hana_instance.AskHana()
+    return hana_instance
 
 if __name__ == '__main__':
+    import discord
+    import asyncio
+    from concurrent.futures import ThreadPoolExecutor
+    
+    intents = discord.Intents.default()
+    intents.message_content = True
+
+    client = discord.Client(intents=intents)
+    hana_instance = CallHana()
+    executor = ThreadPoolExecutor(max_workers=3)
+    
+    @client.event
+    async def on_ready():
+        print(f'We have logged in as {client.user}')
+
+    @client.event
+    async def on_message(message):
+        if message.author == client.user:
+            return
+
+        if message.content.startswith("Hana"):
+            conversant_name = message.author.name
+            if conversant_name == "futurio16":
+                conversant_name = "Futurio"
+            
+            input_state = {"messages": [HumanMessage(message.content)], "conversant": conversant_name, "hana_response": "", "channel": "text"}
+
+            loop = asyncio.get_event_loop()
+            response_text = await loop.run_in_executor(executor, hana_instance.AskHana, input_state)
+            
+            await message.channel.send(response_text)
+
     try:
-        CallHana()
+        client.run(DISCORD_TOKEN)
     except KeyboardInterrupt:
-        print("\n\n=== Hana is stopped ===")
+        print("\n\n=== Hana Discord Bot is stopped ===")
     finally:
+        print("Cleaning up resources...")
+        executor.shutdown(wait=True)
         cleanup()
+    

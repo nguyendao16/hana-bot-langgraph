@@ -1,5 +1,11 @@
 # 📝 Changelog
 
+## [1.0.1] - 2025-11-12
+### Added
+- Ability: Google Search.
+- Memory Management: Short-Term Memory.
+- Connection Effective: Redis Connection Pool.
+
 ## [1.0.0] - 2025-11-11
 ### Added
 - Modularized the Hana architecture.

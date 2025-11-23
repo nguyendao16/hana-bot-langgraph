@@ -47,7 +47,7 @@ class RedisService:
     def list_history(self, key, message, windows_length=10):
         llen = self.client.llen(key)
         if self.client.exists(key):
-            self.client.expire(key, 120)
+            self.client.expire(key, 240)
             self.client.rpush(key, message)
         elif llen < windows_length:
             self.client.rpush(key, message)
