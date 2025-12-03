@@ -1,7 +1,9 @@
 import asyncio
+import discord
 from concurrent.futures import ThreadPoolExecutor
 from langchain_core.messages import HumanMessage
 from discord.ext import commands
+connections = {}
 
 class Discord:
     def __init__(self,
@@ -49,7 +51,7 @@ class Discord:
         @self.bot.command(name='join')
         async def join(ctx):
             if ctx.author.voice is None or ctx.author.voice.channel is None:
-                await ctx.send("You need to join a voice channel first.")
+                await ctx.send("You need to join a voice channel first.")   
                 return
 
             voice_channel = ctx.author.voice.channel
@@ -73,14 +75,22 @@ class Discord:
                 await ctx.send("Hana is not in any voice channel.")
 
     def run(self):
-        try:
-            self.bot.run(self.token)
-        except KeyboardInterrupt:
-            print("\n\n=== Hana Discord Bot is stopped ===")
-        finally:
-            self._cleanup()
+        """Run the Discord bot"""
+        self.bot.run(self.token)
     
-    def _cleanup(self):
-        print("Cleaning up Discord bot resources...")
+    async def cleanup_async(self):
+        """Async cleanup for Discord resources"""
+        print("Cleaning up Discord resources...")
+        
+        for vc in self.bot.voice_clients:
+            try:
+                if vc.is_connected():
+                    await vc.disconnect(force=True)
+            except Exception as e:
+                print(f"Error disconnecting voice: {e}")
+        
+        if not self.bot.is_closed():
+            await self.bot.close()
+        
         if self.executor:
             self.executor.shutdown(wait=True)

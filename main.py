@@ -1,6 +1,7 @@
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, message=".*pkg_resources.*")
 import discord
+import asyncio
 from discord.ext import commands
 from os import getenv
 from dotenv import load_dotenv
@@ -38,7 +39,7 @@ PG_USER = getenv("PG_USER")
 PG_PASSWORD = getenv("PG_PASSWORD")
 PG_PORT = getenv("PG_PORT")
 
-def cleanup():
+def cleanup_db():
     print("\n\nShutting down Hana...")
     try:
         RedisService.close_pool()
@@ -112,6 +113,15 @@ if __name__ == '__main__':
     try:
         hana_discord.run()
     except KeyboardInterrupt:
-        cleanup()
         print("\n\n=== Hana Discord Bot is stopped ===")
+    finally:
+        print("Cleaning up all resources...")
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(hana_discord.cleanup_async())
+            loop.close()
+        except Exception as e:
+            print(f"Error during Discord cleanup: {e}")
         
+        cleanup_db()

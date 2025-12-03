@@ -1,4 +1,7 @@
 # 📝 Changelog
+## [1.0.2] - 2025-11-23
+### Added
+- Ability: Discord chat, join voice chat but can't hear or speak.
 
 ## [1.0.1] - 2025-11-12
 ### Added

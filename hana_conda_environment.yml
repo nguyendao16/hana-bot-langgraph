@@ -51,4 +51,4 @@ dependencies:
     - ipython
     - https://github.com/KittenML/KittenTTS/releases/download/0.1/kittentts-0.1.0-py3-none-any.whl
     - google-api-python-client
-    - discord.py[voice]
+    - py-cord[voice]
