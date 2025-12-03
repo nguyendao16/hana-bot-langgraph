@@ -64,14 +64,14 @@ Hana is in the persona development phase. The characteristics are being built/de
 - [x] TTS/STT integration
 
 ### Phase 2: Deep Development 🚧 (Current)
-- [x] Define core personality traits
-  - [ ] Voice Channel
-    - [x] Join Channel
-    - [ ] Record 
-  - [x] Chat Channel   
+- [ ] Define core personality traits 
 - [ ] Develop emotional intelligence
 - [ ] Long-Term Memory
 - [ ] Discord Hana
+  - [ ] Voice Channel
+    - [x] Join Channel
+    - [ ] Record 
+  - [x] Chat Channel  
 - [ ] Speaker Diarization
 - [ ] Multi-language support
 - [ ] Custom tools integration
