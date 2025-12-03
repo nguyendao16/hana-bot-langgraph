@@ -1,9 +1,12 @@
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, message=".*pkg_resources.*")
+import discord
+import asyncio
+from discord.ext import commands
 from os import getenv
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import HumanMessage
 from pathlib import Path
 from hana.modules.abilities import Abilities
 from hana.modules.brain import Brain, Memory
@@ -13,6 +16,7 @@ from hana.hana import Hana
 from hana.connection.google_service import GoogleService
 from hana.connection.redisconpool import RedisService
 from hana.connection.pgconpool import PostgresService
+from hana.connection.discord_handler import Discord
 
 load_dotenv()
 OLLAMA_MODEL = getenv("OLLAMA_MODEL")
@@ -29,21 +33,13 @@ GOOGLE_CX = getenv("GOOGLE_CX")
 REDIS_URL = getenv("REDIS_URL")
 DISCORD_TOKEN = getenv("DISCORD_TOKEN")
 
-def cleanup():
-    print("\n\nShutting down Hana...")
-    try:
-        RedisService.close_pool()
-        print("All connections closed successfully.")
-    except Exception as e:
-        print(f"Error during cleanup: {e}")
-
 PG_HOST = getenv("PG_HOST")
 PG_DBNAME = getenv("PG_DBNAME")
 PG_USER = getenv("PG_USER")
 PG_PASSWORD = getenv("PG_PASSWORD")
 PG_PORT = getenv("PG_PORT")
 
-def cleanup():
+def cleanup_db():
     print("\n\nShutting down Hana...")
     try:
         RedisService.close_pool()
@@ -52,7 +48,7 @@ def cleanup():
     except Exception as e:
         print(f"Error during cleanup: {e}")
 
-def CallHana():
+def SetupHana():
     google_service = GoogleService(api_key=GOOGLE_SERVICE_API,
                                    cx=GOOGLE_CX,
                                    )
@@ -98,44 +94,34 @@ def CallHana():
     return hana_instance
 
 if __name__ == '__main__':
-    import discord
-    import asyncio
-    from concurrent.futures import ThreadPoolExecutor
+    hana = SetupHana()
     
     intents = discord.Intents.default()
     intents.message_content = True
+    intents.voice_states = True
 
-    client = discord.Client(intents=intents)
-    hana_instance = CallHana()
-    executor = ThreadPoolExecutor(max_workers=3)
+    bot = commands.Bot(command_prefix="*", intents=intents)
+    executor = ThreadPoolExecutor(max_workers=1)
     
-    @client.event
-    async def on_ready():
-        print(f'We have logged in as {client.user}')
-
-    @client.event
-    async def on_message(message):
-        if message.author == client.user:
-            return
-
-        if message.content.startswith("Hana"):
-            conversant_name = message.author.name
-            if conversant_name == "futurio16":
-                conversant_name = "Futurio"
-            
-            input_state = {"messages": [HumanMessage(message.content)], "conversant": conversant_name, "hana_response": "", "channel": "text"}
-
-            loop = asyncio.get_event_loop()
-            response_text = await loop.run_in_executor(executor, hana_instance.AskHana, input_state)
-            
-            await message.channel.send(response_text)
-
+    hana_discord = Discord(
+        bot=bot,
+        hana=hana,
+        executor=executor,
+        token=DISCORD_TOKEN,
+    )
+    
     try:
-        client.run(DISCORD_TOKEN)
+        hana_discord.run()
     except KeyboardInterrupt:
         print("\n\n=== Hana Discord Bot is stopped ===")
     finally:
-        print("Cleaning up resources...")
-        executor.shutdown(wait=True)
-        cleanup()
-    
+        print("Cleaning up all resources...")
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(hana_discord.cleanup_async())
+            loop.close()
+        except Exception as e:
+            print(f"Error during Discord cleanup: {e}")
+        
+        cleanup_db()
