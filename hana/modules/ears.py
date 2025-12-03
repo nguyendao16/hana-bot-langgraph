@@ -1,8 +1,15 @@
 from RealtimeSTT import AudioToTextRecorder
 from langchain_core.messages import HumanMessage
+import logging
+
 class Ears:
     def __init__(self, powerby: str = None):
-        self.recorder = AudioToTextRecorder(model=powerby)
+        self.recorder = AudioToTextRecorder(model=powerby,
+                                            device="cuda",
+                                            gpu_device_index=0,
+                                            compute_type="float32",
+                                            level=logging.WARNING,
+                                            )
     def __call__(self, state: dict):
         print("Hana is listening...")
         message = self.listening()

@@ -28,7 +28,6 @@
 - **Real-time Processing**: Real-time processing and response
 
 ### 🛠️ Technical Stack
-- **Backend**: FastAPI + Python 3.11
 - **AI Framework**: LangChain + LangGraph
 - **Memory**: Redis (conversation history)
 - **Database**: PostgreSQL (vector store)
@@ -65,10 +64,14 @@ Hana is in the persona development phase. The characteristics are being built/de
 - [x] TTS/STT integration
 
 ### Phase 2: Deep Development 🚧 (Current)
-- [ ] Define core personality traits
+- [ ] Define core personality traits 
 - [ ] Develop emotional intelligence
 - [ ] Long-Term Memory
 - [ ] Discord Hana
+  - [ ] Voice Channel
+    - [x] Join Channel
+    - [ ] Record 
+  - [x] Chat Channel  
 - [ ] Speaker Diarization
 - [ ] Multi-language support
 - [ ] Custom tools integration
@@ -86,7 +89,6 @@ Hana is in the persona development phase. The characteristics are being built/de
 ## 📝 License
 
 This project is licensed under the Personal License - see the LICENSE file for details.
-
 
 ## 📧 Contact
 

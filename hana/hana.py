@@ -58,3 +58,4 @@ class Hana:
         except Exception as e:
             print(f"\nError occurred: {e}")
             print("=== Restarting conversation... ===\n")
+
