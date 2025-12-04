@@ -6,6 +6,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from hana.modules.state import State
 from hana.modules.abilities import Abilities
 from hana.connection.redisconpool import RedisService
+from hana.connection.pgconpool import PostgresService
+from __future__ import annotations
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -13,11 +15,12 @@ OLLAMA_HOST = os.getenv("OLLAMA_HOST")
 GOOGLE_SERVICE_API = os.getenv("GOOGLE_SERVICE_API")
 OPENAI_API = os.getenv("OPENAI_API")
 
+
 class Brain:
     def __init__(self, powerby: str, 
                        persona: ChatPromptTemplate,
                        abilities: list,
-                       memory = None,
+                       memory: Memory,
                        ): 
         #llm = ChatOllama(model=powerby, base_url=OLLAMA_HOST)
         llm = ChatOpenAI(model=powerby, 
@@ -95,7 +98,7 @@ class Brain:
             else:
                 return response
 
-    def perform_ability(self, calling_ability):
+    def perform_ability(self, calling_ability: dict):
         for ability in calling_ability:
             result = self.abilities_name[ability["name"]].invoke(ability["args"])
         
@@ -120,7 +123,7 @@ class Brain:
     
 
 class Memory:
-    def __init__(self, redis_conn, pg_con):
+    def __init__(self, redis_conn: RedisService, pg_con: PostgresService):
         self.redis_conn = redis_conn
         self.pg_con = pg_con
     
@@ -140,4 +143,20 @@ class Memory:
         if mode == "recall":
             pass
         elif mode == "remember":
-            pass
+            create_table = """CREATE TABLE memories IF NOT EXIST (
+                        id               BIGSERIAL PRIMARY KEY,
+                        user_id          UUID,
+                        memory_type      TEXT,
+                        content          TEXT,
+                        source           TEXT,
+                        importance_score NUMERIC(3,2),
+                        embedding        VECTOR,
+                        tags             TEXT[],
+                        created_at       TIMESTAMPTZ DEFAULT now(),
+                        updated_at       TIMESTAMPTZ DEFAULT now(),
+                        metadata         JSONB
+                        );
+                    """
+            self.pg_con.execute(create_table)
+
+            
